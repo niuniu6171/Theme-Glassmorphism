@@ -931,7 +931,7 @@ const useAppStore = defineStore('app', () => {
 
   const hideGeneralCard = computed<boolean>(() => readBooleanSetting(themeSettings.value, 'hideGeneralCard', false))
 
-  const visitorInfoEnabled = computed<boolean>(() => readBooleanSetting(themeSettings.value, 'visitorInfoEnabled', true))
+  const visitorInfoEnabled = computed<boolean>(() => readBooleanSetting(themeSettings.value, 'visitorInfoEnabled', false))
 
   const visitorInfoStyle = computed<VisitorInfoStyle>(() => {
     const value = themeSettings.value.visitorInfoStyle

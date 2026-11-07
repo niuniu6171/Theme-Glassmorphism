@@ -1,3 +1,17 @@
+# NiuniuHub · Glassmorphism
+
+个人维护的 Monitor 主题，fork 自 [Gongsc/Theme-Glassmorphism](https://github.com/Gongsc/Theme-Glassmorphism)，基线版本 1.4.8。原项目 MIT 许可与版权保留。
+
+本 fork 修复延迟图表名称的 HTML 注入风险，打包本地图标并禁止图标 CDN 回退。默认关闭访客 IP 查询与联网汇率，使用主题自带背景。内置汇率用于估算，可在财务面板手动覆盖；需要实时汇率时可明确开启“联网更新汇率”。
+
+主题标识：`niuniuhub-glass`，与原版并存。下载本仓库 Releases 的 `theme.tar.gz` 上传安装；更新来源为本仓库。完整变更见 [1.4.9 发布说明](docs/releases/1.4.9.md)。
+
+构建和验证：`npm ci --ignore-scripts`、`npm test`、`npm run lint`、`npm run package`。发布包和 SHA256 写入 `release/`。不要向仓库提交面板密码、agent token、节点数据或生产站点备份。
+
+第三方主题与管理后台同源，需要信任其代码。默认无第三方自动请求并不等于主题获得了独立权限隔离；开启外部服务设置会恢复对应外联。
+
+---
+
 # Glassmorphism for 极简探针
 
 ![Glassmorphism 主题首页预览](preview.png)

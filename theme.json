@@ -1,10 +1,10 @@
 {
-  "name": "Glassmorphism · 玻璃拟态",
-  "short": "glassmorphism",
-  "description": "极简探针玻璃拟态主题，提供地球视图与节点界面。",
-  "version": "1.4.8",
-  "author": "Gongsc",
-  "url": "https://github.com/Gongsc/Theme-Glassmorphism",
+  "name": "NiuniuHub · Glassmorphism",
+  "short": "niuniuhub-glass",
+  "description": "基于 Gongsc Glassmorphism 的个人维护版：修复图表 HTML 注入，内置图标，默认不向第三方请求数据。",
+  "version": "1.4.9",
+  "author": "niuniu6171 / Gongsc",
+  "url": "https://github.com/niuniu6171/Theme-Glassmorphism",
   "config": [
     {
       "type": "title",
@@ -175,10 +175,17 @@
       "label": "隐藏头部"
     },
     {
+      "key": "onlineExchangeRates",
+      "type": "boolean",
+      "default": false,
+      "label": "联网更新汇率",
+      "help": "默认使用内置或手动汇率，折算金额仅供估算。开启后访客浏览器会请求第三方汇率服务；不发送节点或账单数据。"
+    },
+    {
       "key": "visitorInfoEnabled",
       "type": "boolean",
-      "default": true,
-      "help": "显示访客 IP 信息，样式见下方“访客信息样式”",
+      "default": false,
+      "help": "开启后浏览器会请求第三方 IP 查询服务，向其暴露访问出口 IP；默认关闭。",
       "label": "显示访客信息"
     },
     {
@@ -575,7 +582,7 @@
     {
       "key": "backgroundType",
       "type": "select",
-      "default": "bing",
+      "default": "image",
       "options": [
         {
           "value": "image",
@@ -596,14 +603,14 @@
     {
       "key": "lightBackgroundUrl",
       "type": "string",
-      "default": "",
+      "default": "/images/default-background-v2.webp",
       "help": "图片或视频模式使用，支持公开的 http(s) URL 或站内路径。",
       "label": "亮色模式背景地址"
     },
     {
       "key": "darkBackgroundUrl",
       "type": "string",
-      "default": "",
+      "default": "/images/default-background-v2.webp",
       "help": "图片或视频模式使用，支持公开的 http(s) URL 或站内路径。",
       "label": "暗色模式背景地址"
     },

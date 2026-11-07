@@ -524,7 +524,7 @@ function formatTraffic(tib: number): string {
               </option>
             </select>
             <Button type="button" size="sm" variant="outline" class="h-8 gap-1.5" @click="emit('resetRates')">
-              <Icon icon="tabler:refresh" width="14" height="14" />恢复今日汇率
+                <Icon icon="tabler:refresh" width="14" height="14" />恢复参考汇率
             </Button>
           </div>
 

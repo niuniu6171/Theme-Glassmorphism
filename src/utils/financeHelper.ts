@@ -1,10 +1,20 @@
 import type { NodeData } from '@/stores/nodes'
-import { isFreeNode } from '@/utils/tagHelper'
+import { getSiteConfig } from '../monitor/config.ts'
+import { isFreeNode } from './tagHelper.ts'
 
 export type CurrencyCode = 'CNY' | 'USD' | 'HKD' | 'EUR' | 'GBP' | 'JPY' | 'RUB' | 'CHF' | 'INR' | 'VND' | 'THB' | 'CAD'
 // 固定币种之外，还带汇率接口返回的其他三字母币种（Hub 1.3.1 起节点货币可填任意 ISO 4217 代码）
 export type ExchangeRates = Record<CurrencyCode, number> & { [code: string]: number | undefined }
 export type ExchangeRateSource = 'cache' | 'network' | 'stale-cache' | 'default'
+
+export interface ExchangeRateResult {
+  rates: ExchangeRates
+  source: ExchangeRateSource
+  updatedAt: number | null
+  /** Built-in or historical rates are estimates, not today's fetched rates. */
+  approximate: boolean
+  onlineEnabled: boolean
+}
 
 export type MeteredTrafficMode = 'sum' | 'max' | 'up' | 'down'
 
@@ -44,7 +54,7 @@ export const SUPPORTED_CURRENCIES: CurrencyCode[] = ['CNY', 'USD', 'HKD', 'EUR',
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 const ISO_CURRENCY_REGEX = /^[A-Z]{3}$/
 const LONG_TERM_YEARS = 100
-let exchangeRatesInflight: Promise<{ rates: ExchangeRates, source: ExchangeRateSource, updatedAt: number | null }> | null = null
+let exchangeRatesInflight: Promise<ExchangeRateResult> | null = null
 
 export const DEFAULT_EXCHANGE_RATES: ExchangeRates = {
   CNY: 1,
@@ -381,11 +391,17 @@ export function formatFinanceAmount(amount: number, currency: CurrencyCode): {
   }
 }
 
-export async function getDailyExchangeRates(): Promise<{
-  rates: ExchangeRates
-  source: ExchangeRateSource
-  updatedAt: number | null
-}> {
+export async function getDailyExchangeRates(): Promise<ExchangeRateResult> {
+  // Explicit consent is required before reading a network cache or fetching rates.
+  if (getSiteConfig().onlineExchangeRates !== true) {
+    return {
+      rates: { ...DEFAULT_EXCHANGE_RATES },
+      source: 'default',
+      updatedAt: null,
+      approximate: true,
+      onlineEnabled: false,
+    }
+  }
   const today = getTodayDateKey()
   const cached = readCachedExchangeRates()
 
@@ -394,6 +410,8 @@ export async function getDailyExchangeRates(): Promise<{
       rates: cached.rates,
       source: 'cache',
       updatedAt: cached.fetchedAt,
+      approximate: false,
+      onlineEnabled: true,
     }
   }
 
@@ -407,6 +425,8 @@ export async function getDailyExchangeRates(): Promise<{
           rates: fetchedRates,
           source: 'network' as const,
           updatedAt,
+          approximate: false,
+          onlineEnabled: true,
         }
       }
 
@@ -415,13 +435,17 @@ export async function getDailyExchangeRates(): Promise<{
           rates: cached.rates,
           source: 'stale-cache' as const,
           updatedAt: cached.fetchedAt,
+          approximate: true,
+          onlineEnabled: true,
         }
       }
 
       return {
-        rates: DEFAULT_EXCHANGE_RATES,
+        rates: { ...DEFAULT_EXCHANGE_RATES },
         source: 'default' as const,
         updatedAt: null,
+        approximate: true,
+        onlineEnabled: true,
       }
     })().finally(() => {
       exchangeRatesInflight = null

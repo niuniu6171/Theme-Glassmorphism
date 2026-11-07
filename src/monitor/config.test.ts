@@ -36,7 +36,7 @@ try {
   saved = { alertTitle: 'Hub 公告', otherVersion: 'keep' }
   await loadConfig()
   assert.equal('otherVersion' in loaded, false)
-  assert.ok(requests.every(r => r.url === '/api/themes/glassmorphism/config'))
+  assert.ok(requests.every(r => r.url === '/api/themes/niuniuhub-glass/config'))
   assert.ok(requests.every(r => r.init?.credentials === 'same-origin'))
   for (const status of [401, 404, 500]) {
     getStatus = status
@@ -51,8 +51,8 @@ try {
   malformed = false
   saved = { hideEarth: true, otherVersion: { keep: true } }
   requests.length = 0
-  await saveConfig({ ...defaultConfig, alertTitle: '新公告', visitorInfoEnabled: false })
-  assert.deepEqual(saved, { otherVersion: { keep: true }, alertTitle: '新公告', visitorInfoEnabled: false })
+  await saveConfig({ ...defaultConfig, alertTitle: '新公告', visitorInfoEnabled: true })
+  assert.deepEqual(saved, { otherVersion: { keep: true }, alertTitle: '新公告', visitorInfoEnabled: true })
   assert.deepEqual(requests.map(r => r.init?.method ?? 'GET'), ['GET', 'PUT'])
   assert.equal(getSiteConfig().alertTitle, '新公告')
   await saveConfig({ ...defaultConfig })

@@ -11,6 +11,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { PING_RECORD_MAX_COUNT } from '@/constants/load'
+import { formatPingTooltipRow } from '@/monitor/pingTooltip'
 import { historyWindows, windowLabel } from '@/monitor/transport'
 import { loadPingRecordsWithTasks } from '@/services/history.service'
 import { loadPingMetricStats, loadPublicPingTasks, queryMetrics } from '@/services/metrics.service'
@@ -672,8 +673,7 @@ const pingChartOption = computed(() => {
             // 通过任务名找到对应的任务ID，再获取颜色
             const task = tasks.value.find(t => t.name === item.seriesName)
             const color = task ? colorMap.get(task.id) || chartColors[0] : chartColors[0]
-            const colorDot = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${color};margin-right:8px;flex-shrink:0"></span>`
-            html += `<div style="display:flex;align-items:center">${colorDot}<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.seriesName}</span><span style="margin-left:auto;font-weight:600;margin-left:16px;font-variant-numeric:tabular-nums">${isLossChart.value ? `${item.value.toFixed(1)}%` : `${Math.round(item.value)} ms`}</span></div>`
+            html += formatPingTooltipRow(item.seriesName, item.value, color, isLossChart.value)
           }
         }
         html += '</div>'

@@ -1,12 +1,22 @@
-/**
- * Iconify 集合预注册（可选）
- *
- * 默认行为：`<Icon icon="icon-park-outline:sun" />` 在未注册集合时
- * 会从 https://api.iconify.design 按需拉取单个图标 SVG（带浏览器缓存）。
- *
- * 此函数保留作为未来扩展入口；当前不做预注册，避免把整个
- * 图标集合（每个 1MB+）打进首屏 bundle。
- */
+import type { IconifyAPIModule, IconifyJSON } from '@iconify/vue'
+import { _api, addCollection } from '@iconify/vue'
+import localIcons from '../generated/local-icons.json' with { type: 'json' }
+
+const noRemoteIcons: IconifyAPIModule = {
+  prepare: (provider, prefix, icons) => [{ type: 'icons', provider, prefix, icons }],
+  send: (_host, _params, callback) => callback('abort', 404),
+}
+
+/** Register every UI/provider icon before app.mount; missing icons never use a CDN. */
 export async function setupIconify(): Promise<void> {
-  // no-op：交给 @iconify/vue 默认 CDN 加载策略
+  // Unknown providers inherit the default module, which refuses network use too.
+  for (const provider of new Set(['', ..._api.listAPIProviders()]))
+    _api.setAPIModule(provider, noRemoteIcons)
+
+  for (const collection of localIcons.collections) {
+    // JSON inference creates a union of disjoint icon-name maps. The generator
+    // validates these maps, and addCollection performs Iconify's runtime check.
+    if (!addCollection(collection as unknown as IconifyJSON))
+      throw new Error('Invalid bundled icon collection: ' + collection.prefix)
+  }
 }

@@ -1,6 +1,7 @@
 import { mkdirSync, cpSync, readFileSync, writeFileSync, existsSync, rmSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
+import { resolve, dirname } from 'node:path'
 const meta = JSON.parse(readFileSync('theme.json', 'utf8'))
 if (!/^[a-zA-Z0-9_-]+$/.test(meta.short)) throw new Error('Invalid theme short name')
 for (const key of ['name', 'description', 'version', 'author', 'url']) {
@@ -8,7 +9,9 @@ for (const key of ['name', 'description', 'version', 'author', 'url']) {
 }
 if (!existsSync('dist/index.html')) throw new Error('Missing dist/index.html; run the build first')
 if (!existsSync('preview.png')) throw new Error('Missing preview.png')
-const output = `release/${meta.short}`
+const releaseRoot = resolve('release')
+const output = resolve(releaseRoot, meta.short)
+if (dirname(output) !== releaseRoot) throw new Error('Package directory must remain inside release/')
 rmSync(output, { recursive: true, force: true })
 mkdirSync(output, { recursive: true })
 for (const file of ['theme.json', 'LICENSE', 'dist']) cpSync(file, `${output}/${file}`, { recursive: true })

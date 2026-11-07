@@ -11,7 +11,7 @@
     "earthRenderer": "cobe",
     "hideEarth": false,
     "hideGeneralCard": false,
-    "visitorInfoEnabled": true,
+    "visitorInfoEnabled": false,
     "glassColorPreset": "柔和",
     "colorVisionMode": "标准",
     "glassCustomColors": "{\"lightCard\":\"#f1f5f9bd\",\"lightControl\":\"#e2e8f0c2\",\"lightText\":\"#14151a\",\"lightMutedText\":\"#3f4552\",\"lightBorder\":\"#cbd5e199\",\"darkCard\":\"#0d111ad9\",\"darkControl\":\"#101624cc\",\"darkText\":\"#f7f8fb\",\"darkMutedText\":\"#d6dae4\",\"darkBorder\":\"#ffffff2e\"}",
@@ -41,13 +41,14 @@
     "chartDashboardPreset": "默认",
     "chartDashboardTemplate": "cpu\nmemory\ndisk\nnetwork\ngpu\nconnections\nprocess",
     "backgroundEnabled": true,
-    "backgroundType": "bing",
-    "lightBackgroundUrl": "",
-    "darkBackgroundUrl": "",
+    "backgroundType": "image",
+    "lightBackgroundUrl": "/images/default-background-v2.webp",
+    "darkBackgroundUrl": "/images/default-background-v2.webp",
     "backgroundBlur": 30,
     "backgroundOverlay": 0,
     "homepageMultiPing": true,
     "homepageMultiPingTaskIds": "",
-    "homepageMultiPingCount": 3
+    "homepageMultiPingCount": 3,
+    "onlineExchangeRates": false
   }
 }
